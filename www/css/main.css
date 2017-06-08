@@ -1,0 +1,12 @@
+canvas {
+    position: absolute;
+    opacity: 0;
+}
+canvas,
+video {
+    width: 100vmax;
+}
+
+button {
+    width: 100vmax;
+}
