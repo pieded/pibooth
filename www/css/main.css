@@ -1,7 +1,7 @@
 canvas {
     position: absolute;
-    opacity: 0;
 }
+
 canvas,
 video {
     width: 100vmax;
@@ -9,4 +9,42 @@ video {
 
 button {
     width: 100vmax;
+}
+
+.transparent {
+    opacity: 0;
+}
+
+.opaque {
+    opacity: 1;
+}
+
+.all-render-hacks {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.shutter {
+    animation-name: cameraFlash;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+}
+
+@keyframes cameraFlash {
+    0% {
+        filter: brightness(99999%) saturate(0) blur(1px);
+    }
+
+    20% {
+        filter: brightness(200%) saturate(100%) blur(0);
+    }
+
+    100% {
+        filter: brightness(100%)
+    }
+
 }

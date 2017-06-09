@@ -1,0 +1,16 @@
+{
+  "extends": "standard",
+  "plugins": [
+    "standard",
+    "promise"
+  ],
+  "env": [
+    "browser"
+  ],
+  "rules": {
+    "semi": [
+      1,
+      "always"
+    ]
+  }
+}

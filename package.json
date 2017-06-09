@@ -7,14 +7,27 @@
     "type": "git",
     "url": "https://github.com/pieded/pibooth"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "campi": "0.0.5",
-    "node-raspistill": "0.0.11",
-    "pi-camera": "^0.1.5"
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "moment": "^2.18.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "stylelint": "^7.10.1"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:css": "stylelint www",
+    "lint:js": "eslint www",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

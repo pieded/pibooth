@@ -1,16 +1,10 @@
 'use strict';
-//import campi from 'campi';
-//import piCam from 'pi-camera';
-//import Raspistill from 'node-raspistill';
-
-//campi.getImageAsStream();
-//piCam.snap();
-//Raspistill.takePhoto();
 
 const noop = () => {};
 
 const snapWidth = 1920;
 const snapHeight = 1080;
+const previewTimeout = 3000;
 
 const mediaConstraints = {
     video: {
@@ -19,10 +13,15 @@ const mediaConstraints = {
     }
 };
 
+const snapRequest = new Request('/snap', {
+    method: 'POST'
+});
+
 const canvas = document.getElementById('preview');
 canvas.width = snapWidth;
 canvas.height = snapHeight;
-const preview = canvas.getContext('2d');
+
+const previewBox = document.getElementById('previewbox');
 const video = document.getElementById('video');
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -34,10 +33,20 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
 // Trigger photo take
 document.getElementById('snap').addEventListener('click', function() {
-    preview.drawImage(video, 0, 0, snapWidth, snapHeight);
-    canvas.style.opacity = 1;
+    canvas.getContext('2d').drawImage(video, 0, 0, snapWidth, snapHeight);
+    const fullQuality = canvas.toDataURL('image/jpeg', 1.0);
+
+    fetch(snapRequest, {
+        body: fullQuality
+    }).then(() =>{
+    }).catch(() => {
+    });
+
+    previewBox.classList.add('shutter', 'opaque');
+    previewBox.classList.remove('transparent');
     setTimeout(() => {
-        canvas.style.opacity = 0;
+        previewBox.classList.remove('shutter', 'opaque');
+        previewBox.classList.add('transparent');
     },
-    1000);
+    previewTimeout);
 });
