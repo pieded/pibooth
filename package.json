@@ -21,13 +21,14 @@
     "eslint-plugin-node": "^5.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "stylelint": "^7.10.1"
+    "stylelint": "^7.10.1",
+    "stylelint-config-standard": "^16.0.0"
   },
   "scripts": {
     "start": "node index.js",
     "lint": "npm run lint:js && npm run lint:css",
-    "lint:css": "stylelint www",
-    "lint:js": "eslint www",
+    "lint:css": "stylelint www/**/*.css",
+    "lint:js": "eslint *.js www/js/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

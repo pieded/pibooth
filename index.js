@@ -6,7 +6,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 
-const noop = () => {};
 const docroot = path.join(__dirname, 'www');
 const snaps = path.join(__dirname, 'snaps');
 const filenameFormat = 'YYYY-MM-DD_HH:mm:ss:SS';
@@ -22,7 +21,7 @@ const rawBodyParserOptions = {
 };
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(docroot, 'index.html'))
+    res.sendFile(path.join(docroot, 'index.html'));
 });
 
 app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
@@ -31,7 +30,7 @@ app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
     const image = Buffer.from(imageData, 'base64');
     const filename = moment().format(filenameFormat);
 
-    fs.writeFile(path.join(snaps, filename + '.jpg'), image, 'base64', function(err) {
+    fs.writeFile(path.join(snaps, filename + '.jpg'), image, 'base64', function (err) {
         if (err) {
             throw err;
         }
@@ -41,9 +40,9 @@ app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
 
 app.use((err, req, res, next) => {
     if (req.xhr) {
-        res.status(500).send({ error: err.message });
+        res.status(500).send({error: err.message});
     } else {
-        res.status(500).render('error', { error: err });
+        res.status(500).render('error', {error: err});
     }
     next(err);
 });

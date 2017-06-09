@@ -7,8 +7,8 @@ video {
     width: 100vmax;
 }
 
-button {
-    width: 100vmax;
+video {
+    background-color: #000;
 }
 
 .transparent {
@@ -44,7 +44,6 @@ button {
     }
 
     100% {
-        filter: brightness(100%)
+        filter: brightness(100%);
     }
-
 }

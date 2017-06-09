@@ -4,11 +4,21 @@
     "standard",
     "promise"
   ],
-  "env": [
-    "browser"
-  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
+    "padded-blocks": 0,
     "semi": [
+      2,
+      "always"
+    ],
+    "indent": [
+      2,
+      4
+    ],
+    "eol-last": [
       1,
       "always"
     ]
