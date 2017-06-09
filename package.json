@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "start:raspi": "node index.js && chromium-browser --noerrdialogs --kiosk https://localhost:8080",
+    "start:raspi": "node index.js; chromium-browser --noerrdialogs --kiosk http://localhost:8080",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint www/**/*.css",
     "lint:js": "eslint *.js www/js/*.js",
