@@ -1,12 +1,18 @@
+body {
+}
+
 canvas {
     position: absolute;
 }
 
+body,
 canvas,
 video {
     width: 100vmax;
+    height: 100vmin;
 }
 
+body,
 video {
     background-color: #000;
 }
