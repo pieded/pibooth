@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 const moment = require('moment');
 
 const rootDir = path.join(__dirname, '..');
@@ -14,6 +15,7 @@ const filenameFormat = 'YYYY-MM-DD_HH:mm:ss:SS';
 const app = express();
 
 app.use(express.static(docroot));
+app.use(compression());
 
 const rawBodyParserOptions = {
     type: '*/*',

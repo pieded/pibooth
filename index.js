@@ -11,7 +11,7 @@ const app = require('./app/routes');
 const certDir = path.join(__dirname, 'cert');
 
 const raspiconf = {app: ['chromium-browser', '--noerrdialogs', '--kiosk']};
-const opnConfig = {} || raspiconf;
+const opnConfig = process.env.DEVICE === 'raspi' ? raspiconf : {};
 
 const privateKey = fs.readFileSync(path.join(certDir, 'localhost.key'), 'utf8');
 const certificate = fs.readFileSync(path.join(certDir, 'localhost.crt'), 'utf8');
