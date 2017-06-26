@@ -60,3 +60,6 @@ typings/
 .idea
 
 snaps/*.jpg
+
+cert/*.crt
+cert/*.key

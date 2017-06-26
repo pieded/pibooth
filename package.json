@@ -22,11 +22,12 @@
     "eslint-plugin-node": "^5.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "portfinder": "^1.0.13",
     "stylelint": "^7.10.1",
     "stylelint-config-standard": "^16.0.0"
   },
   "scripts": {
-    "start": "node index.js & opn http://localhost:8080",
+    "start": "node index.js",
     "start:raspi": "node index.js & chromium-browser --noerrdialogs --kiosk http://localhost:8080",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint www/**/*.css",
