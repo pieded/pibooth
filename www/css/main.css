@@ -5,14 +5,22 @@ canvas {
     position: absolute;
 }
 
+#previewbox,
 canvas,
 video {
+    display: block;
+    margin: auto;
     height: 100vmin;
 }
 
 body,
 video {
     background-color: #000;
+}
+
+#previewbox {
+    width: 100%;
+    height: 100%;
 }
 
 .transparent {
@@ -40,11 +48,11 @@ video {
 
 @keyframes cameraFlash {
     0% {
-        filter: brightness(99999%);
+        filter: brightness(99999%) saturate(0) blur(1px);
     }
 
     20% {
-        filter: brightness(200%);
+        filter: brightness(200%) saturate(100%) blur(0);
     }
 
     100% {
