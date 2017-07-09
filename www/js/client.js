@@ -3,8 +3,8 @@
 const noop = () => {
 };
 
-const snapWidth = 1920;
-const snapHeight = 1080;
+const snapWidth = 3280;
+const snapHeight = 2464;
 const previewTimeout = 3000;
 
 const mediaConstraints = {
