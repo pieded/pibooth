@@ -50,5 +50,6 @@ portfinder.getPortPromise()
         listenToPort(port);
     })
     .catch((err) => {
-
+        console.log('could not get free port in time!', err.message);
+        process.exit();
     });
