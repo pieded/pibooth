@@ -24,6 +24,10 @@ canvas.height = snapHeight;
 
 const previewBox = document.getElementById('previewbox');
 const video = document.getElementById('video');
+let videoDimensions = {
+    height: null,
+    width: null
+};
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia(mediaConstraints)
@@ -31,6 +35,11 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             video.src = window.URL.createObjectURL(localMediaStream);
         }).catch(noop);
 }
+
+video.addEventListener('loadeddata', function (event) {
+    videoDimensions.height = this.videoHeight;
+    videoDimensions.width = this.videoWidth;
+});
 
 window.addEventListener('keydown', function (event) {
     if (!event.key) {
@@ -47,6 +56,9 @@ window.addEventListener('keydown', function (event) {
     fetch(snapRequest, {
         body: fullQuality
     });
+
+    canvas.style.width = videoDimensions.width;
+    canvas.style.height = videoDimensions.height;
 
     previewBox.classList.add('shutter', 'opaque');
     previewBox.classList.remove('transparent');

@@ -5,7 +5,6 @@ canvas {
     position: absolute;
 }
 
-body,
 canvas,
 video {
     height: 100vmin;
