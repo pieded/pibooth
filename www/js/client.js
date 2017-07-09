@@ -50,7 +50,7 @@ window.addEventListener('keydown', function (event) {
         return;
     }
 
-    canvas.getContext('2d').drawImage(video, 0, 0, snapWidth, snapHeight);
+    canvas.getContext('2d').drawImage(video, 0, 0, videoDimensions.width, videoDimensions.height);
     const fullQuality = canvas.toDataURL('image/jpeg', 1.0);
 
     fetch(snapRequest, {
