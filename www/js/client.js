@@ -48,8 +48,8 @@ window.addEventListener('keydown', function (event) {
         return;
     }
 
-    canvas.style.width = videoDimensions.width;
-    canvas.style.height = videoDimensions.height;
+    canvas.width = videoDimensions.width;
+    canvas.height = videoDimensions.height;
 
     canvas.getContext('2d').drawImage(video, 0, 0, videoDimensions.width, videoDimensions.height);
     const fullQuality = canvas.toDataURL('image/jpeg', 1.0);
