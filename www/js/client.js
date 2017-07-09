@@ -19,8 +19,6 @@ const snapRequest = new Request('/snap', {
 });
 
 const canvas = document.getElementById('preview');
-canvas.width = snapWidth;
-canvas.height = snapHeight;
 
 const previewBox = document.getElementById('previewbox');
 const video = document.getElementById('video');
@@ -50,15 +48,15 @@ window.addEventListener('keydown', function (event) {
         return;
     }
 
+    canvas.style.width = videoDimensions.width;
+    canvas.style.height = videoDimensions.height;
+
     canvas.getContext('2d').drawImage(video, 0, 0, videoDimensions.width, videoDimensions.height);
     const fullQuality = canvas.toDataURL('image/jpeg', 1.0);
 
     fetch(snapRequest, {
         body: fullQuality
     });
-
-    canvas.style.width = videoDimensions.width;
-    canvas.style.height = videoDimensions.height;
 
     previewBox.classList.add('shutter', 'opaque');
     previewBox.classList.remove('transparent');
