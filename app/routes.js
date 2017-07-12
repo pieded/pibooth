@@ -26,23 +26,11 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(docroot, 'index.html'));
 });
 
-const getImageBuffer = (imageData) => {
-    if (imageData.match(/^data:image\/jpeg;base64,/)) {
-        return Buffer.from(
-            imageData.replace(/^data:image\/jpeg;base64,/, ''),
-            'base64'
-        );
-    }
-
-    return Buffer.from(imageData, 'binary');
-};
-
 app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
-
-    const image = getImageBuffer(req.body.toString());
+    const image = Buffer.from(req.body, 'binary');
     const filename = moment().format(filenameFormat);
 
-    fs.writeFile(path.join(snaps, filename + '.jpg'), image, 'base64', function (err) {
+    fs.writeFile(path.join(snaps, filename + '.jpg'), image, 'binary', function (err) {
         if (err) {
             throw err;
         }

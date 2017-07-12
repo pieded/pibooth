@@ -21,12 +21,9 @@ class PhotoBooth {
             method: 'POST'
         });
 
-        this.videoDimensions = {
-            height: null,
-            width: null
-        };
-
         this.imageCapture = null;
+
+        this.getCameraAccess();
 
         this.initDom();
     }
@@ -38,13 +35,10 @@ class PhotoBooth {
     }
 
     start () {
-
-        this.getCameraAccess();
-
-        const updateVideoDimensions = this.updateVideoDimensions.bind(this);
+        const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
 
         this.video.addEventListener('loadeddata', function () {
-            updateVideoDimensions(this.videoWidth, this.videoHeight);
+            updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
         });
 
         window.addEventListener('keydown', this.onKeydown.bind(this));
@@ -59,16 +53,9 @@ class PhotoBooth {
             return;
         }
 
-        this.canvas.width = this.videoDimensions.width;
-        this.canvas.height = this.videoDimensions.height;
-
-        this.canvas.getContext('2d').drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
-        const fullQuality = this.canvas.toDataURL('image/jpeg', 1.0);
-
-        this.sendImageToServer(fullQuality);
-
+        this.capturePhoto();
+        this.capturePreview();
         this.showPreviewImage();
-
     }
 
     getCameraAccess () {
@@ -84,43 +71,32 @@ class PhotoBooth {
     }
 
     createImageCapture (mediaStream) {
-        if (ImageCapture) {
-            const mediaStreamTrack = mediaStream.getVideoTracks()[0];
-            this.imageCapture = new ImageCapture(mediaStreamTrack);
+        if (typeof ImageCapture === 'undefined') {
+            return;
         }
+        const mediaStreamTrack = mediaStream.getVideoTracks()[0];
+        this.imageCapture = new ImageCapture(mediaStreamTrack);
     }
 
-    updateVideoDimensions (width, height) {
-        this.videoDimensions = {
-            width: width,
-            height: height
-        };
-    }
-
-    getPreviewImage () {
-
-    }
-
-    getFullQualityImage () {
-
+    updatePreviewCanvasDimensions (width, height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
     }
 
     capturePreview () {
         this.imageCapture.grabFrame()
-            .then(imageBitmap => {
-                this.canvas.width = imageBitmap.width;
-                this.canvas.height = imageBitmap.height;
-                this.canvas.getContext('2d').drawImage(imageBitmap, 0, 0);
+            .then((bitmap) => {
+                this.drawPreviewImage(bitmap);
             })
-            .catch(error => console.error('grabFrame() error:', error));
+            .catch((error) => console.error('grabFrame() error:', error));
     }
 
     capturePhoto () {
         this.imageCapture.takePhoto()
-            .then(blob => {
-                this.sendImageToServer(blob);
+            .then((photo) => {
+                this.sendImageToServer(photo);
             })
-            .catch(error => console.error('takePhoto() error:', error));
+            .catch((error) => console.error('takePhoto() error:', error));
     }
 
     sendImageToServer (image) {
@@ -129,17 +105,27 @@ class PhotoBooth {
         });
     }
 
+    drawPreviewImage (image) {
+        this.canvas.getContext('2d').drawImage(image, 0, 0);
+    }
+
     showPreviewImage () {
-        this.previewBox.classList.add('shutter', 'opaque');
-        this.previewBox.classList.remove('transparent');
-        setTimeout(() => {
-            this.previewBox.classList.remove('shutter', 'opaque');
-            this.previewBox.classList.add('transparent');
-        },
+        this.addFlashLightEffectToPreviewAndShowIt();
+        setTimeout(
+            this.removeFlashlightEffectFromPreviewAndHideIt.bind(this),
             this.previewTimeout
         );
     }
 
+    addFlashLightEffectToPreviewAndShowIt () {
+        this.previewBox.classList.add('shutter', 'opaque');
+        this.previewBox.classList.remove('transparent');
+    }
+
+    removeFlashlightEffectFromPreviewAndHideIt () {
+        this.previewBox.classList.remove('shutter', 'opaque');
+        this.previewBox.classList.add('transparent');
+    }
 }
 
 new PhotoBooth().start();
