@@ -76,6 +76,18 @@ class PhotoBooth {
         }
         const mediaStreamTrack = mediaStream.getVideoTracks()[0];
         this.imageCapture = new ImageCapture(mediaStreamTrack);
+        this.imageCapture.getPhotoCapabilities().then((photoCapabilities) => {
+            this.showHintForPhotoCapabilities(photoCapabilities);
+        });
+    }
+
+    showHintForPhotoCapabilities (photoCapabilities) {
+        const dimensions = [
+            photoCapabilities.imageWidth.max,
+            photoCapabilities.imageHeight.max
+        ];
+
+        console.log('images will be taken in ' + dimensions.join(' x '));
     }
 
     updatePreviewCanvasDimensions (width, height) {
