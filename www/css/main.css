@@ -1,11 +1,3 @@
-body {
-}
-
-canvas {
-    position: absolute;
-}
-
-#previewbox,
 canvas,
 video {
     display: block;
@@ -23,12 +15,16 @@ video {
     height: 100%;
 }
 
+.absolute {
+    position: absolute;
+}
+
 .transparent {
-    opacity: 0;
+    display: none;
 }
 
 .opaque {
-    opacity: 1;
+    display: block;
 }
 
 .all-render-hacks {

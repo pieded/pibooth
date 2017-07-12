@@ -118,12 +118,12 @@ class PhotoBooth {
     }
 
     addFlashLightEffectToPreviewAndShowIt () {
-        this.previewBox.classList.add('shutter', 'opaque');
+        this.previewBox.classList.add('shutter', 'opaque', 'absolute');
         this.previewBox.classList.remove('transparent');
     }
 
     removeFlashlightEffectFromPreviewAndHideIt () {
-        this.previewBox.classList.remove('shutter', 'opaque');
+        this.previewBox.classList.remove('shutter', 'opaque', 'absolute');
         this.previewBox.classList.add('transparent');
     }
 }
