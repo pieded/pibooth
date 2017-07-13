@@ -6,6 +6,9 @@ const snapWidth = 3280;
 const snapHeight = 2464;
 const previewTimeout = 3000;
 const noop = () => {};
+const triggerKeys = [
+    'ArrowUp'
+];
 
 class PhotoBooth {
 
@@ -13,6 +16,7 @@ class PhotoBooth {
         this.snapWidth = snapWidth;
         this.snapHeight = snapHeight;
         this.previewTimeout = previewTimeout;
+        this.triggerKeys = triggerKeys;
         this.mediaConstraints = {
             video: {
                 width: this.snapWidth,
@@ -51,7 +55,7 @@ class PhotoBooth {
             return;
         }
 
-        if (keypress.key !== 'ArrowUp') {
+        if (this.triggerKeys.indexOf(keypress.key) !== -1) {
             return;
         }
 
