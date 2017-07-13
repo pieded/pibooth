@@ -1,7 +1,5 @@
 'use strict';
 
-require('image-capture');
-
 const snapWidth = 3280;
 const snapHeight = 2464;
 const previewTimeout = 3000;

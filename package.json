@@ -35,6 +35,7 @@
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint www/**/*.css",
     "lint:js": "eslint *.js www/js/*.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "ln -nsf $PWD/node_modules/ www/js/node"
   }
 }
