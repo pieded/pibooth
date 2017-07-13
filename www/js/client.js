@@ -53,7 +53,7 @@ class PhotoBooth {
             return;
         }
 
-        if (this.triggerKeys.indexOf(keypress.key) !== -1) {
+        if (this.triggerKeys.indexOf(keypress.key) === -1) {
             return;
         }
 
