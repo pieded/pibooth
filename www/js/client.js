@@ -8,9 +8,7 @@ const triggerKeys = [
     'ArrowUp'
 ];
 
-if (typeof ImageCapture === 'undefined' && typeof imagecapture !== 'undefined') {
-    ImageCapture = imagecapture();
-}
+window.ImageCapture = window.ImageCapture || imagecapture;
 
 class PhotoBooth {
 
