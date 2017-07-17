@@ -5,7 +5,7 @@ const snapHeight = 2464;
 const previewTimeout = 3000;
 const noop = () => {};
 const triggerKeys = [
-    'ArrowUp'
+    'Enter'
 ];
 
 window.ImageCapture = window.ImageCapture || imagecapture;
