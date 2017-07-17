@@ -8,7 +8,7 @@ const triggerKeys = [
     'Enter'
 ];
 
-window.ImageCapture = window.ImageCapture || imagecapture;
+window.ImageCapture = window.ImageCapture || imagecapture.ImageCapture;
 
 class PhotoBooth {
 
