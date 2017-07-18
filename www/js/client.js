@@ -19,8 +19,8 @@ class PhotoBooth {
         this.triggerKeys = triggerKeys;
         this.mediaConstraints = {
             video: {
-                width: this.snapWidth,
-                height: this.snapHeight
+                width: {exact: this.snapWidth},
+                height: {exact: this.snapHeight}
             }
         };
         this.snapRequest = new Request('/snap', {
