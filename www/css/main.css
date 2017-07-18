@@ -1,3 +1,8 @@
+audio::-webkit-media-controls-enclosure,
+video::-webkit-media-controls-enclosure {
+    display: none;
+}
+
 canvas,
 video {
     display: block;
@@ -37,9 +42,9 @@ video {
 }
 
 .shutter {
-    animation-name: cameraFlash;
+    /*animation-name: cameraFlash;
     animation-duration: 2s;
-    animation-iteration-count: 1;
+    animation-iteration-count: 1;*/
 }
 
 @keyframes cameraFlash {

@@ -1,5 +1,8 @@
 'use strict';
 
+const raspicamMaxWidth = 3280;
+const raspicamMaxHeight = 2464;
+
 const snapWidth = 1920;
 const snapHeight = 1080;
 const previewTimeout = 3000;
@@ -73,7 +76,13 @@ class PhotoBooth {
             .then((localMediaStream) => {
                 this.video.src = window.URL.createObjectURL(localMediaStream);
                 this.createImageCapture(localMediaStream);
-            }).catch(noop);
+            }).catch((error) => {
+                this.mediaConstraints.video = {
+                    width: this.mediaConstraints.video.width.exact,
+                    height: this.mediaConstraints.video.height.exact
+                };
+                this.getCameraAccess();
+            });
     }
 
     createImageCapture (mediaStream) {
