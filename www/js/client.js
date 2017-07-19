@@ -35,26 +35,29 @@ class PhotoBooth {
         this.mediaStreamTrack = null;
 
         this.imageCapture = null;
-
-        this.initDom();
-        this.getCameraAccess().then(() => {});
-
-    }
-
-    initDom () {
-        this.previewBox = document.getElementById('previewbox');
-        this.canvas = document.getElementById('preview');
-        this.video = document.getElementById('video');
     }
 
     start () {
-        const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
+        this.initDom().then(() => {
+            this.getCameraAccess().then(() => {
+                const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
 
-        this.video.addEventListener('loadeddata', function () {
-            updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
+                this.video.addEventListener('loadeddata', function () {
+                    updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
+                });
+
+                window.addEventListener('keydown', this.onKeydown.bind(this));
+            });
         });
+    }
 
-        window.addEventListener('keydown', this.onKeydown.bind(this));
+    initDom () {
+        return new Promise((resolve, reject) => {
+            this.previewBox = document.getElementById('previewbox');
+            this.canvas = document.getElementById('preview');
+            this.video = document.getElementById('video');
+            resolve();
+        });
     }
 
     onKeydown (keypress) {
