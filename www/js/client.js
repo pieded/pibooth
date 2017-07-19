@@ -86,6 +86,15 @@ class PhotoBooth {
             });
     }
 
+    restartCamera () {
+        if (this.mediaStream.start) {
+            this.mediaStream.start();
+        }
+        if (this.mediaStreamTrack.start) {
+            this.mediaStreamTrack.start();
+        }
+    }
+
     stopCamera () {
         if (this.mediaStream.stop) {
             this.mediaStream.stop();
@@ -139,7 +148,8 @@ class PhotoBooth {
     capturePhotoOnServer () {
         fetch(new Request('/snap')).then((response) => {
             if (response.status === 200) {
-                this.getCameraAccess();
+                // this.getCameraAccess();
+                this.restartCamera();
             } else {
                 this.capturePhoto();
             }
