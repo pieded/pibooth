@@ -3,8 +3,8 @@
 const raspicamMaxWidth = 3280;
 const raspicamMaxHeight = 2464;
 
-const snapWidth = 1920;
-const snapHeight = 1080;
+const snapWidth = raspicamMaxWidth;
+const snapHeight = raspicamMaxHeight;
 const previewTimeout = 3000;
 const noop = () => {};
 const triggerKeys = [
@@ -22,8 +22,8 @@ class PhotoBooth {
         this.triggerKeys = triggerKeys;
         this.mediaConstraints = {
             video: {
-                width: {exact: this.snapWidth},
-                height: {exact: this.snapHeight}
+                width: this.snapWidth,
+                height: this.snapHeight
             }
         };
         this.snapRequest = new Request('/snap', {
@@ -82,11 +82,7 @@ class PhotoBooth {
                 this.video.src = window.URL.createObjectURL(this.mediaStream);
                 this.createImageCapture(this.mediaStream);
             }).catch((error) => {
-                this.mediaConstraints.video = {
-                    width: this.mediaConstraints.video.width.exact,
-                    height: this.mediaConstraints.video.height.exact
-                };
-                this.getCameraAccess();
+                console.log(error.message);
             });
     }
 
