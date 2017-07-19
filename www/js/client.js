@@ -87,22 +87,13 @@ class PhotoBooth {
     }
 
     restartCamera () {
-        if (this.mediaStream.start) {
-            this.mediaStream.start();
-        }
-        if (this.mediaStreamTrack.start) {
-            this.mediaStreamTrack.start();
-        }
+        this.mediaStream.addTrack(this.mediaStreamTrack);
     }
 
     stopCamera () {
-        if (this.mediaStream.stop) {
-            this.mediaStream.stop();
-        }
-        if (this.mediaStreamTrack.stop) {
-            this.mediaStreamTrack.stop();
-        }
+        this.mediaStream.removeTrack(this.mediaStreamTrack);
     }
+
 
     createImageCapture (mediaStream) {
         if (typeof ImageCapture === 'undefined') {
@@ -147,10 +138,8 @@ class PhotoBooth {
 
     capturePhotoOnServer () {
         fetch(new Request('/snap')).then((response) => {
-            if (response.status === 200) {
-                // this.getCameraAccess();
-                this.restartCamera();
-            } else {
+            this.restartCamera();
+            if (response.status !== 200) {
                 this.capturePhoto();
             }
         });
