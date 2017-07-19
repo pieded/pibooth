@@ -36,9 +36,9 @@ class PhotoBooth {
 
         this.imageCapture = null;
 
-        this.getCameraAccess();
-
         this.initDom();
+        this.getCameraAccess().then(() => {});
+
     }
 
     initDom () {
@@ -74,33 +74,42 @@ class PhotoBooth {
         Promise.all(
             [
                 this.capturePreview(),
-                this.showPreviewImage(),
-                this.stopCamera()
+                this.showPreviewImage()
             ]
         ).then(() => {
+            this.stopCamera();
             this.capturePhotoOnServer();
         });
     }
 
     getCameraAccess () {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            return;
-        }
+        return new Promise((resolve, reject) => {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                return;
+            }
 
-        navigator.mediaDevices.getUserMedia(this.mediaConstraints)
-            .then((localMediaStream) => {
-                this.mediaStream = localMediaStream;
-                this.video.src = window.URL.createObjectURL(this.mediaStream);
-                this.createImageCapture(this.mediaStream);
-                this.ready = true;
-            }).catch((error) => {
-                console.log(error.message);
-            });
+            navigator.mediaDevices.getUserMedia(this.mediaConstraints)
+                .then((localMediaStream) => {
+                    this.mediaStream = localMediaStream;
+                    this.video.src = window.URL.createObjectURL(this.mediaStream);
+                    this.createImageCapture(this.mediaStream);
+                    this.ready = true;
+                    resolve();
+                }).catch((error) => {
+                    reject(error);
+                });
+        });
     }
 
     restartCamera () {
-        this.getCameraAccess();
-        //this.mediaStream.addTrack(this.mediaStreamTrack);
+        return new Promise((resolve, reject) => {
+            //this.mediaStream.addTrack(this.mediaStreamTrack);
+            this.getCameraAccess().then(() => {
+                resolve();
+            }).catch((error) => {
+                reject(error);
+            });
+        });
     }
 
     stopCamera () {
@@ -163,10 +172,11 @@ class PhotoBooth {
 
     capturePhotoOnServer () {
         fetch(new Request('/snap')).then((response) => {
-            this.restartCamera();
-            if (response.status !== 200) {
-                this.capturePhoto();
-            }
+            this.restartCamera().then(() => {
+                if (response.status !== 200) {
+                    this.capturePhoto();
+                }
+            });
         });
     }
 
