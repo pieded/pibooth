@@ -6,6 +6,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const moment = require('moment');
+const RaspistillClass = require('node-raspistill').Raspistill;
+const raspistill = new RaspistillClass();
 
 const rootDir = path.join(__dirname, '..');
 const docroot = path.join(rootDir, 'www');
@@ -26,17 +28,32 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(docroot, 'index.html'));
 });
 
+app.get('/snap', function (req, res) {
+    const filename = 'RASPISTILL_' + moment().format(filenameFormat);
+    raspistill.takePhoto()
+        .then((image) => {
+            saveImage(filename, image, res);
+        }).catch((err) => {
+            res.send(err.message);
+        });
+});
+
 app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
     const image = Buffer.from(req.body, 'binary');
     const filename = moment().format(filenameFormat);
 
-    fs.writeFile(path.join(snaps, filename + '.jpg'), image, 'binary', function (err) {
-        if (err) {
-            throw err;
-        }
-        res.send('wrote file' + filename);
-    });
+    saveImage(filename, image, res);
+
 });
+
+function saveImage (filename, data, res) {
+    fs.writeFile(path.join(snaps, filename + '.jpg'), data, {encoding: 'binary'}, function (err) {
+        if (err) {
+            res.send('failed ' + err.message);
+        }
+        res.send('wrote file ' + filename);
+    });
+}
 
 app.use((err, req, res, next) => {
     if (req.xhr) {

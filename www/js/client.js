@@ -62,6 +62,7 @@ class PhotoBooth {
             return;
         }
 
+        this.capturePhotoOnServer();
         this.capturePhoto();
         this.capturePreview();
         this.showPreviewImage();
@@ -124,6 +125,10 @@ class PhotoBooth {
                 this.sendImageToServer(photo);
             })
             .catch((error) => console.error('takePhoto() error:', error));
+    }
+
+    capturePhotoOnServer () {
+        fetch(new Request('/snap'));
     }
 
     sendImageToServer (image) {
