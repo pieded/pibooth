@@ -99,12 +99,18 @@ class PhotoBooth {
     }
 
     restartCamera () {
-        this.mediaStream.addTrack(this.mediaStreamTrack);
+        this.getCameraAccess();
+        //this.mediaStream.addTrack(this.mediaStreamTrack);
     }
 
     stopCamera () {
         return new Promise((resolve, reject) => {
-            this.mediaStream.removeTrack(this.mediaStreamTrack);
+            if (this.mediaStream.stop) {
+                this.mediaStream.stop();
+            }
+            if (this.mediaStreamTrack.stop) {
+                this.mediaStreamTrack.stop();
+            }
             resolve();
         });
     }
