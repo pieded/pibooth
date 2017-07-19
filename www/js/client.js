@@ -71,10 +71,15 @@ class PhotoBooth {
         }
 
         this.ready = false;
-        this.capturePreview();
-        this.showPreviewImage();
-        this.stopCamera();
-        this.capturePhotoOnServer();
+        Promise.all(
+            [
+                this.capturePreview(),
+                this.showPreviewImage(),
+                this.stopCamera()
+            ]
+        ).then(() => {
+            this.capturePhotoOnServer();
+        });
     }
 
     getCameraAccess () {
@@ -98,7 +103,10 @@ class PhotoBooth {
     }
 
     stopCamera () {
-        this.mediaStream.removeTrack(this.mediaStreamTrack);
+        return new Promise((resolve, reject) => {
+            this.mediaStream.removeTrack(this.mediaStreamTrack);
+            resolve();
+        });
     }
 
     createImageCapture (mediaStream) {
@@ -127,11 +135,16 @@ class PhotoBooth {
     }
 
     capturePreview () {
-        this.imageCapture.grabFrame()
-            .then((bitmap) => {
-                this.drawPreviewImage(bitmap);
-            })
-            .catch((error) => console.error('grabFrame() error:', error));
+        return new Promise((resolve, reject) => {
+            this.imageCapture.grabFrame()
+                .then((bitmap) => {
+                    this.drawPreviewImage(bitmap);
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
     }
 
     capturePhoto () {
@@ -162,11 +175,14 @@ class PhotoBooth {
     }
 
     showPreviewImage () {
-        this.addFlashLightEffectToPreviewAndShowIt();
-        setTimeout(
-            this.removeFlashlightEffectFromPreviewAndHideIt.bind(this),
-            this.previewTimeout
-        );
+        return new Promise((resolve, reject) => {
+            this.addFlashLightEffectToPreviewAndShowIt();
+            setTimeout(
+                this.removeFlashlightEffectFromPreviewAndHideIt.bind(this),
+                this.previewTimeout
+            );
+            resolve();
+        });
     }
 
     addFlashLightEffectToPreviewAndShowIt () {
