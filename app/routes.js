@@ -34,7 +34,7 @@ app.get('/snap', function (req, res) {
         .then((image) => {
             saveImage(filename, image, res);
         }).catch((err) => {
-            res.send(err.message);
+            res.status(500).send(err.message);
         });
 });
 
@@ -49,7 +49,7 @@ app.post('/snap', bodyParser.raw(rawBodyParserOptions), function (req, res) {
 function saveImage (filename, data, res) {
     fs.writeFile(path.join(snaps, filename + '.jpg'), data, {encoding: 'binary'}, function (err) {
         if (err) {
-            res.send('failed ' + err.message);
+            res.status(500).send('failed ' + err.message);
         }
         res.send('wrote file ' + filename);
     });

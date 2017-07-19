@@ -69,7 +69,6 @@ class PhotoBooth {
         this.showPreviewImage();
         this.stopCamera();
         this.capturePhotoOnServer();
-        //this.capturePhoto();
     }
 
     getCameraAccess () {
@@ -142,8 +141,12 @@ class PhotoBooth {
     }
 
     capturePhotoOnServer () {
-        fetch(new Request('/snap')).then(() => {
-            this.getCameraAccess();
+        fetch(new Request('/snap')).then((response) => {
+            if (response.status === 200) {
+                this.getCameraAccess();
+            } else {
+                this.capturePhoto();
+            }
         });
     }
 
