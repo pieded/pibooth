@@ -30,6 +30,9 @@ class PhotoBooth {
             method: 'POST'
         });
 
+        this.mediaStream = null;
+        this.mediaStreamTrack = null;
+
         this.imageCapture = null;
 
         this.getCameraAccess();
@@ -62,10 +65,11 @@ class PhotoBooth {
             return;
         }
 
-        this.capturePhotoOnServer();
-        this.capturePhoto();
         this.capturePreview();
         this.showPreviewImage();
+        this.stopCamera();
+        this.capturePhotoOnServer();
+        //this.capturePhoto();
     }
 
     getCameraAccess () {
@@ -75,8 +79,9 @@ class PhotoBooth {
 
         navigator.mediaDevices.getUserMedia(this.mediaConstraints)
             .then((localMediaStream) => {
-                this.video.src = window.URL.createObjectURL(localMediaStream);
-                this.createImageCapture(localMediaStream);
+                this.mediaStream = localMediaStream;
+                this.video.src = window.URL.createObjectURL(this.mediaStream);
+                this.createImageCapture(this.mediaStream);
             }).catch((error) => {
                 this.mediaConstraints.video = {
                     width: this.mediaConstraints.video.width.exact,
@@ -86,12 +91,21 @@ class PhotoBooth {
             });
     }
 
+    stopCamera () {
+        if (this.mediaStream.stop) {
+            this.mediaStream.stop();
+        }
+        if (this.mediaStreamTrack.stop) {
+            this.mediaStreamTrack.stop();
+        }
+    }
+
     createImageCapture (mediaStream) {
         if (typeof ImageCapture === 'undefined') {
             return;
         }
-        const mediaStreamTrack = mediaStream.getVideoTracks()[0];
-        this.imageCapture = new ImageCapture(mediaStreamTrack);
+        this.mediaStreamTrack = mediaStream.getVideoTracks()[0];
+        this.imageCapture = new ImageCapture(this.mediaStreamTrack);
         this.imageCapture.getPhotoCapabilities().then((photoCapabilities) => {
             this.showHintForPhotoCapabilities(photoCapabilities);
         });
@@ -128,7 +142,9 @@ class PhotoBooth {
     }
 
     capturePhotoOnServer () {
-        fetch(new Request('/snap'));
+        fetch(new Request('/snap')).then(() => {
+            this.getCameraAccess();
+        });
     }
 
     sendImageToServer (image) {
