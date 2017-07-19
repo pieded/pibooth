@@ -16,6 +16,7 @@ window.ImageCapture = window.ImageCapture || imagecapture.ImageCapture;
 class PhotoBooth {
 
     constructor () {
+        this.ready = false;
         this.snapWidth = snapWidth;
         this.snapHeight = snapHeight;
         this.previewTimeout = previewTimeout;
@@ -57,6 +58,10 @@ class PhotoBooth {
     }
 
     onKeydown (keypress) {
+        if (!this.ready) {
+            return;
+        }
+
         if (!keypress.key) {
             return;
         }
@@ -65,6 +70,7 @@ class PhotoBooth {
             return;
         }
 
+        this.ready = false;
         this.capturePreview();
         this.showPreviewImage();
         this.stopCamera();
@@ -81,6 +87,7 @@ class PhotoBooth {
                 this.mediaStream = localMediaStream;
                 this.video.src = window.URL.createObjectURL(this.mediaStream);
                 this.createImageCapture(this.mediaStream);
+                this.ready = true;
             }).catch((error) => {
                 console.log(error.message);
             });
@@ -93,7 +100,6 @@ class PhotoBooth {
     stopCamera () {
         this.mediaStream.removeTrack(this.mediaStreamTrack);
     }
-
 
     createImageCapture (mediaStream) {
         if (typeof ImageCapture === 'undefined') {
@@ -171,6 +177,7 @@ class PhotoBooth {
     removeFlashlightEffectFromPreviewAndHideIt () {
         this.previewBox.classList.remove('shutter', 'opaque', 'absolute');
         this.previewBox.classList.add('transparent');
+        this.ready = true;
     }
 }
 
