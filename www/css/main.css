@@ -42,6 +42,7 @@ video {
 }
 
 .shutter {
+    border: 1px solid #1cbbff;
     /*animation-name: cameraFlash;
     animation-duration: 2s;
     animation-iteration-count: 1;*/
