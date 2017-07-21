@@ -3,8 +3,8 @@
 const raspicamMaxWidth = 3280;
 const raspicamMaxHeight = 2464;
 
-const snapWidth = raspicamMaxWidth;
-const snapHeight = raspicamMaxHeight;
+const snapWidth = 1920;
+const snapHeight = 1080;
 const previewTimeout = 3000;
 const noop = () => {};
 const triggerKeys = [
@@ -39,15 +39,18 @@ class PhotoBooth {
 
     start () {
         this.initDom().then(() => {
-            this.getCameraAccess().then(() => {
-                const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
+            this.getCameraAccess()
+                .then(() => {
+                    const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
 
-                this.video.addEventListener('loadeddata', function () {
-                    updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
+                    this.video.addEventListener('loadeddata', function () {
+                        updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
+                    });
+
+                    window.addEventListener('keydown', this.onKeydown.bind(this));
+                }).catch((error) => {
+                    console.error(error.message);
                 });
-
-                window.addEventListener('keydown', this.onKeydown.bind(this));
-            });
         });
     }
 
@@ -87,7 +90,7 @@ class PhotoBooth {
     getCameraAccess () {
         return new Promise((resolve, reject) => {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                return;
+                reject(new Error());
             }
 
             navigator.mediaDevices.getUserMedia(this.mediaConstraints)
@@ -143,7 +146,7 @@ class PhotoBooth {
             photoCapabilities.imageHeight.max
         ];
 
-        console.log('images will be taken in ' + dimensions.join(' x '));
+        console.info('images will be taken in ' + dimensions.join(' x '));
     }
 
     updatePreviewCanvasDimensions (width, height) {
@@ -169,7 +172,9 @@ class PhotoBooth {
             .then((photo) => {
                 this.sendImageToServer(photo);
             })
-            .catch((error) => console.error('takePhoto() error:', error));
+            .catch((error) => {
+                console.error('takePhoto() error:', error);
+            });
     }
 
     capturePhotoOnServer () {
