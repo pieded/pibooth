@@ -77,7 +77,10 @@ class PhotoBooth {
         this.capturePreview()
             .then(this.showPreviewImage())
             .then(this.stopCamera())
-            .then(this.capturePhotoOnServer());
+            .then(this.capturePhotoOnServer())
+            .catch((error) => {
+                console.error(error.message);
+            });
     }
 
     getCameraAccess () {
@@ -211,4 +214,5 @@ class PhotoBooth {
     }
 }
 
-new PhotoBooth().start();
+window.photobooth = new PhotoBooth();
+window.photobooth.start();
