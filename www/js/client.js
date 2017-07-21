@@ -74,15 +74,10 @@ class PhotoBooth {
         }
 
         this.ready = false;
-        Promise.all(
-            [
-                this.capturePreview(),
-                this.showPreviewImage()
-            ]
-        ).then(() => {
-            this.stopCamera();
-            this.capturePhotoOnServer();
-        });
+        this.capturePreview()
+            .then(this.showPreviewImage())
+            .then(this.stopCamera())
+            .then(this.capturePhotoOnServer());
     }
 
     getCameraAccess () {
@@ -196,11 +191,11 @@ class PhotoBooth {
     showPreviewImage () {
         return new Promise((resolve, reject) => {
             this.addFlashLightEffectToPreviewAndShowIt();
+            resolve();
             setTimeout(
                 this.removeFlashlightEffectFromPreviewAndHideIt.bind(this),
                 this.previewTimeout
             );
-            resolve();
         });
     }
 
