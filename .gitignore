@@ -5,3 +5,5 @@ snaps/*.jpg
 
 cert/*.crt
 cert/*.key
+
+www/js/node
