@@ -7,16 +7,21 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const moment = require('moment');
 const RaspistillClass = require('node-raspistill').Raspistill;
-const raspistill = new RaspistillClass({
-    noFileSave: true
-});
 
+const raspistillWidth = 1920;
+const raspistillHeight = 1080;
 const rootDir = path.join(__dirname, '..');
 const docroot = path.join(rootDir, 'www');
 const snaps = path.join(rootDir, 'snaps');
 const filenameFormat = 'YYYY-MM-DD_HH:mm:ss:SS';
 
 const app = express();
+const raspistill = new RaspistillClass({
+    noFileSave: true,
+    width: raspistillWidth,
+    height: raspistillHeight
+
+});
 
 app.use(express.static(docroot));
 app.use(compression());
