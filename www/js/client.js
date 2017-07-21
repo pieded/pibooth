@@ -5,7 +5,7 @@ const raspicamMaxHeight = 2464;
 
 const snapWidth = raspicamMaxWidth;
 const snapHeight = raspicamMaxHeight;
-const previewTimeout = 5000;
+const previewTimeout = 3000;
 const noop = () => {};
 const triggerKeys = [
     'Enter'

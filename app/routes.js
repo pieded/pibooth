@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const moment = require('moment');
 const RaspistillClass = require('node-raspistill').Raspistill;
-const raspistill = new RaspistillClass();
+const raspistill = new RaspistillClass({
+    noFileSave: true
+});
 
 const rootDir = path.join(__dirname, '..');
 const docroot = path.join(rootDir, 'www');
