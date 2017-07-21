@@ -5,7 +5,7 @@ const raspicamMaxHeight = 2464;
 
 const snapWidth = raspicamMaxWidth;
 const snapHeight = raspicamMaxHeight;
-const previewTimeout = 3000;
+const previewTimeout = 5000;
 const noop = () => {};
 const triggerKeys = [
     'Enter'
@@ -56,6 +56,7 @@ class PhotoBooth {
             this.previewBox = document.getElementById('previewbox');
             this.canvas = document.getElementById('preview');
             this.video = document.getElementById('video');
+            this.errorPixel = document.getElementById('error');
             resolve();
         });
     }
@@ -211,6 +212,14 @@ class PhotoBooth {
         this.previewBox.classList.remove('shutter', 'opaque', 'absolute');
         this.previewBox.classList.add('transparent');
         this.ready = true;
+    }
+
+    showErrorOnPage () {
+        this.errorPixel.classList.add('opaque').remove('transparent');
+    }
+
+    removeErrorFromPage () {
+        this.errorPixel.classList.add('transparent').remove('opaque');
     }
 }
 

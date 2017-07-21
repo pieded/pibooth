@@ -37,6 +37,12 @@ video {
     display: block;
 }
 
+i.error {
+    width: 1px;
+    height: 1px;
+    color: red;
+}
+
 .all-render-hacks {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
