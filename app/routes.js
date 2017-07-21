@@ -32,6 +32,7 @@ app.get('/snap', function (req, res) {
     const filename = 'RASPISTILL_' + moment().format(filenameFormat);
     raspistill.takePhoto()
         .then((image) => {
+            raspistill.stop();
             saveImage(filename, image, res);
         }).catch((err) => {
             res.status(500).send(err.message);
