@@ -41,15 +41,11 @@ class PhotoBooth {
         this.initDom().then(() => {
             this.getCameraAccess()
                 .then(() => {
-                    const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
-
-                    this.video.addEventListener('loadeddata', function () {
-                        updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
-                    });
+                    this.initVideoElement();
 
                     window.addEventListener('keydown', this.onKeydown.bind(this));
                 }).catch((error) => {
-                    console.error(error.message);
+                    this.handleError(error);
                 });
         });
     }
@@ -61,6 +57,14 @@ class PhotoBooth {
             this.video = document.getElementById('video');
             this.errorPixel = document.getElementById('error');
             resolve();
+        });
+    }
+
+    initVideoElement () {
+        const updatePreviewCanvasDimensions = this.updatePreviewCanvasDimensions.bind(this);
+
+        this.video.addEventListener('loadeddata', function () {
+            updatePreviewCanvasDimensions(this.videoWidth, this.videoHeight);
         });
     }
 
@@ -83,7 +87,7 @@ class PhotoBooth {
             .then(this.stopCamera())
             .then(this.capturePhotoOnServer())
             .catch((error) => {
-                console.error(error.message);
+                this.handleError(error);
             });
     }
 
@@ -108,7 +112,6 @@ class PhotoBooth {
 
     restartCamera () {
         return new Promise((resolve, reject) => {
-            //this.mediaStream.addTrack(this.mediaStreamTrack);
             this.getCameraAccess().then(() => {
                 resolve();
             }).catch((error) => {
@@ -173,7 +176,7 @@ class PhotoBooth {
                 this.sendImageToServer(photo);
             })
             .catch((error) => {
-                console.error('takePhoto() error:', error);
+                this.handleError(error);
             });
     }
 
@@ -190,6 +193,8 @@ class PhotoBooth {
     sendImageToServer (image) {
         fetch(this.snapRequest, {
             body: image
+        }).then(() => {
+            this.ready = true;
         });
     }
 
@@ -217,6 +222,10 @@ class PhotoBooth {
         this.previewBox.classList.remove('shutter', 'opaque', 'absolute');
         this.previewBox.classList.add('transparent');
         this.ready = true;
+    }
+
+    handleError (error) {
+        console.error(error.message);
     }
 
     showErrorOnPage () {
