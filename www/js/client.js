@@ -1,5 +1,7 @@
 'use strict';
 
+const useRaspistill = false;
+
 const raspicamMaxWidth = 3280;
 const raspicamMaxHeight = 2464;
 
@@ -16,6 +18,7 @@ window.ImageCapture = window.ImageCapture || imagecapture.ImageCapture;
 class PhotoBooth {
 
     constructor () {
+        this.useRaspistill = useRaspistill;
         this.ready = false;
         this.snapWidth = snapWidth;
         this.snapHeight = snapHeight;
@@ -85,7 +88,7 @@ class PhotoBooth {
         this.capturePreview()
             .then(this.showPreviewImage())
             .then(this.stopCamera())
-            .then(this.capturePhotoOnServer())
+            .then(this.capturePhoto())
             .catch((error) => {
                 this.handleError(error);
             });
@@ -122,6 +125,10 @@ class PhotoBooth {
 
     stopCamera () {
         return new Promise((resolve, reject) => {
+            if (!this.useRaspistill) {
+                resolve();
+                return;
+            }
             if (this.mediaStream.stop) {
                 this.mediaStream.stop();
             }
@@ -171,21 +178,34 @@ class PhotoBooth {
     }
 
     capturePhoto () {
-        this.imageCapture.takePhoto()
-            .then((photo) => {
-                this.sendImageToServer(photo);
-            })
-            .catch((error) => {
-                this.handleError(error);
-            });
+        if (this.useRaspistill) {
+            return this.capturePhotoOnServer();
+        }
+        return this.capturePhotoWithImageCapture();
+    }
+
+    capturePhotoWithImageCapture () {
+        return new Promise((resolve, reject) => {
+            this.imageCapture.takePhoto()
+                .then((photo) => {
+                    this.sendImageToServer(photo);
+                    resolve();
+                })
+                .catch((error) => {
+                    this.handleError(error);
+                });
+        });
     }
 
     capturePhotoOnServer () {
-        fetch(new Request('/snap')).then((response) => {
-            this.restartCamera().then(() => {
-                if (response.status !== 200) {
-                    this.capturePhoto();
-                }
+        return new Promise((resolve, reject) => {
+            fetch(new Request('/snap')).then((response) => {
+                this.restartCamera().then(() => {
+                    if (response.status !== 200) {
+                        this.capturePhotoWithImageCapture();
+                    }
+                    resolve();
+                });
             });
         });
     }
@@ -205,11 +225,12 @@ class PhotoBooth {
     showPreviewImage () {
         return new Promise((resolve, reject) => {
             this.addFlashLightEffectToPreviewAndShowIt();
-            resolve();
-            setTimeout(
+            clearTimeout(this.previewTimeoutCounter);
+            this.previewTimeoutCounter = setTimeout(
                 this.removeFlashlightEffectFromPreviewAndHideIt.bind(this),
                 this.previewTimeout
             );
+            resolve();
         });
     }
 
