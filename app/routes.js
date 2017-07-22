@@ -8,6 +8,7 @@ const compression = require('compression');
 const moment = require('moment');
 const RaspistillClass = require('node-raspistill').Raspistill;
 
+const useTimelapse = false;
 const raspistillWidth = 1920;
 const raspistillHeight = 1080;
 const rootDir = path.join(__dirname, '..');
@@ -38,8 +39,11 @@ app.get('/', function (req, res) {
 });
 
 app.get('/snap', function (req, res) {
-    takeRaspistillPhoto(res);
-    //takeRaspistillTimelapse(res);
+    if (useTimelapse) {
+        takeRaspistillTimelapse(res);
+    } else {
+        takeRaspistillPhoto(res);
+    }
 });
 
 function takeRaspistillPhoto (res) {
